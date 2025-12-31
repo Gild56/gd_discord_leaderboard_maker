@@ -1,34 +1,42 @@
 from datetime import datetime
 import requests
 import json
+import time
 
 
 with open("leaderboard.json", "r", encoding="utf-8") as f:
     players_levels = json.load(f)
 
-
-BASE_URL = "https://api.demonlist.org/level/classic/list"
-response = requests.get(BASE_URL)
+response = requests.get("https://api.demonlist.org/level/classic/list")
 if response.status_code != 200:
     print(f"Error {response.status_code}: {response.text}")
 
-data = response.json().get("data", [])
+start_time = time.perf_counter()
+
+data = response.json().get("data", {})
 if not data:
     print("No levels found.")
 
-all_levels = response.json().get("data", []).get("levels", [])
+all_levels = response.json().get("data", {}).get("levels", [])
 
 with open("top.txt", "w", encoding="utf-8") as f:
     f.write(str(all_levels))
 
 all_levels = [lvl for lvl in all_levels if lvl.get("id") != 2299]
+# It removes Azurite by Royen by its id in the database
+# to keep Azurite by Sillow, that everybody beats (костыли)
+
+
+level_pos = {
+    lvl["name"].lower(): lvl["placement"]
+    for lvl in all_levels
+}
 
 def get_pos(level_name: str) -> int:
-    for lvl in all_levels:
-        if lvl["name"].lower() == level_name.lower():
-            return lvl.get("placement")
-    print(f"!!! Level doesnt exist : {level_name}")
-    raise
+    try:
+        return level_pos[level_name.lower()]
+    except KeyError:
+        raise ValueError(f"Level doesn't exist: {level_name}")
 
 def sort_levels(levels: list[str]) -> list[str]:
     return sorted(levels, key=get_pos)
@@ -42,6 +50,7 @@ def hardest_level_pos(levels: list[str] | dict[str, str]) -> int:
     else:
         return min(get_pos(lvl) for lvl in levels)
 
+
 players_levels_sorted = dict(
     sorted(
         players_levels.items(),
@@ -53,6 +62,7 @@ final_message = ""
 place_emojis = ["1. 🥇", "2. 🥈", "3. 🥉"]
 
 rank = 1
+
 
 for player, levels in players_levels_sorted.items():
 
@@ -89,13 +99,16 @@ result = f"""
 {datetime.now().strftime("%d/%m/%y")} positions from https://demonlist.org/
 __mobile 60Hz completions underlined__
 
-(extreme demons only)
-(you need to have a recording)
-(tell me if i forgot something)
-(message cuts because of discord's length limit)
-"""  # <@&1401222222668107948> <@&1401221967146651648>
+We only accept extreme demons in the leaderboard.
+You need to have a recording to be accepted, Admins will now check the completions.
+Tell me if I forgot something or someone.
+The message cuts because of discord's length limit.
+"""
 
 print(result)
 
 with open("result.txt", "w", encoding="utf-8") as f:
     f.write(result)
+
+end_time = time.perf_counter()
+print(f"Temps d'exécution total : {end_time - start_time:.4f} secondes")
