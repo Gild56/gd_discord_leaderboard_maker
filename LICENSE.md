@@ -4,7 +4,7 @@
 
 © Gild56
 
-This software, known as "GDLeaderboardMaker", is provided under the following terms:
+This software, known as "GD Discord Leaderboard Maker", is provided under the following terms:
 
 ## Permissions
 
