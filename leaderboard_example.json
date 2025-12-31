@@ -1,0 +1,19 @@
+{
+    "<@123456789> :flag_gb:": [
+        "Amethyst", "Tunnel Of Despair"
+    ],
+    "<@987654321> :flag_fr:": [
+        "Conclusion", "Rust", "Acu"
+    ],
+    "<@1895648951498651> :flag_us:": [
+        "Acheron", "Tartarus", "The Golden"
+    ],
+    "<@94854986948651> :flag_kr:": {
+        "Cataclsym": "pc",
+        "Thanatophobia": "mobile",
+        "Trollmachine": "pc",
+        "Niwa": "mobile",
+        "Allegiance": "mobile",
+        "Acu": "pc"
+    }
+}
