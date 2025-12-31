@@ -1,7 +1,6 @@
 from datetime import datetime
 import requests
 import json
-import time
 
 
 with open("leaderboard.json", "r", encoding="utf-8") as f:
@@ -10,8 +9,6 @@ with open("leaderboard.json", "r", encoding="utf-8") as f:
 response = requests.get("https://api.demonlist.org/level/classic/list")
 if response.status_code != 200:
     print(f"Error {response.status_code}: {response.text}")
-
-start_time = time.perf_counter()
 
 data = response.json().get("data", {})
 if not data:
@@ -109,6 +106,3 @@ print(result)
 
 with open("result.txt", "w", encoding="utf-8") as f:
     f.write(result)
-
-end_time = time.perf_counter()
-print(f"Temps d'exécution total : {end_time - start_time:.4f} secondes")
